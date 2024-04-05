@@ -1,54 +1,80 @@
 ARG BASE_TAG="develop"
 ARG BASE_IMAGE="core-ubuntu-jammy"
 FROM kasmweb/$BASE_IMAGE:$BASE_TAG
-
 USER root
 
 ENV HOME /home/kasm-default-profile
 ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
-### Node Ini
-RUN apt-get update && apt-get install -y \
-  ca-certificates \
-  curl
-
-ARG NODE_VERSION=14.21.3
-ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
-ARG NODE_HOME=/opt/$NODE_PACKAGE
-
-ENV NODE_PATH $NODE_HOME/lib/node_modules
-ENV PATH $NODE_HOME/bin:$PATH
-
-RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
-
-# comes with npm
-# RUN npm install -g typescript
-### Node End
-
+######### Customize Container Here ###########
 ### Envrionment config
 ENV DEBIAN_FRONTEND=noninteractive \
     SKIP_CLEAN=true \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/tools/install_tools_deluxe.sh \
-                  /ubuntu/install/misc/install_tools.sh \
-                  /ubuntu/install/chrome/install_chrome.sh \
-                  /ubuntu/install/chromium/install_chromium.sh \
-                  /ubuntu/install/firefox/install_firefox.sh \
-                  /ubuntu/install/sublime_text/install_sublime_text.sh \
+    INST_SCRIPTS="/ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh \
-                  /ubuntu/install/remmina/install_remmina.sh \
-                  /ubuntu/install/only_office/install_only_office.sh \
-                  /ubuntu/install/ansible/install_ansible.sh \
-                  /ubuntu/install/gamepad_utils/install_gamepad_utils.sh \
-                  /ubuntu/install/cleanup/cleanup.sh \
+                  /ubuntu/install/dbeaver/install_dbeaver.sh \
                   /ubuntu/install/smartgit/install_smartgit.sh \
-                  /ubuntu/install/dbeaver/install_dbeaver.sh"
+                  /ubuntu/install/eclipse/install_eclipse.sh"
+### Envrionment config
 
-# Copy install scripts
-COPY ./src/ $INST_DIR
+### Node Ini
+RUN apt-get update && apt-get install -y \
+  ca-certificates \
+  curl
+ARG NODE_VERSION=20.12.0
+ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
+ARG NODE_HOME=/opt/$NODE_PACKAGE
+ENV NODE_PATH $NODE_HOME/lib/node_modules
+ENV PATH $NODE_HOME/bin:$PATH
+RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
+# comes with npm
+# RUN npm install -g typescript
+### Node End
+
+### Oracle client Ini
+RUN apt-get update && apt-get install --no-install-recommends --yes openssl
+RUN apt-get install -y libaio1
+RUN apt install unzip
+RUN wget https://download.oracle.com/otn_software/linux/instantclient/2112000/instantclient-basic-linux.x64-21.12.0.0.0dbru.zip -P /tmp
+WORKDIR /tmp
+RUN unzip instantclient-basic-linux.x64-21.12.0.0.0dbru.zip -d /tmp/oraclecli
+RUN chmod 755 -R /tmp/oraclecli
+ENV NODE_ENV dev
+ENV PATH="/tmp/oraclecli/instantclient_21_12:${PATH}"
+ENV ORACLE_HOME="/tmp/oraclecli/instantclient_21_12"
+ENV LD_LIBRARY_PATH="/tmp/oraclecli/instantclient_21_12:$LD_LIBRARY_PATH" 
+### Oracle client End
+
+# RUN apt-get install git
+
+# install chrome
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/custom_startup.sh -P $INST_DIR/ubuntu/install/chrome
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/install_chrome.sh -P $INST_DIR/ubuntu/install/chrome
+# install chrome
+
+# install vs code
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/custom_startup.sh -P $INST_DIR/ubuntu/install/vs_code
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/install_vs_code.sh -P $INST_DIR/ubuntu/install/vs_code
+# install vs code
+
+# install dbeaver
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/custom_startup.sh -P $INST_DIR/ubuntu/install/dbeaver
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/install_dbeaver.sh -P $INST_DIR/ubuntu/install/dbeaver
+# install dbeaver
+
+# install smartgit
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/custom_startup.sh -P $INST_DIR/ubuntu/install/smartgit
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/install_smartgit.sh -P $INST_DIR/ubuntu/install/smartgit
+# install smartgit
+
+# install eclipse
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/eclipse/eclipse.desktop -P $INST_DIR/ubuntu/install/eclipse
+RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/eclipse/install_eclipse.sh -P $INST_DIR/ubuntu/install/eclipse
+# install eclipse
 
 # Run installations
 RUN \
@@ -61,6 +87,19 @@ RUN \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
   rm -Rf ${INST_DIR}
+
+# Install sublime
+RUN  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - \
+    && apt-get update \
+    && apt-get install -y apt-transport-https \
+    && echo "deb https://download.sublimetext.com/ apt/stable/" |  tee /etc/apt/sources.list.d/sublime-text.list \
+    && apt-get update \
+    && apt-get install sublime-text \
+    && cp /usr/share/applications/sublime_text.desktop $HOME/Desktop/ \
+    && chmod +x $HOME/Desktop/sublime_text.desktop \
+    && chown 1000:1000 $HOME/Desktop/sublime_text.desktop
+# Install sublime
+######### End Customizations ###########
 
 # Userspace Runtime
 ENV HOME /home/kasm-user
