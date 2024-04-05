@@ -14,11 +14,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
-    INST_SCRIPTS="/ubuntu/install/chrome/install_chrome.sh \
-                  /ubuntu/install/vs_code/install_vs_code.sh \
-                  /ubuntu/install/dbeaver/install_dbeaver.sh \
-                  /ubuntu/install/smartgit/install_smartgit.sh"
+    INST_SCRIPTS="/ubuntu/install/dbeaver/install_dbeaver.sh \
+                  /ubuntu/install/smartgit/install_smartgit.sh \
+                  /ubuntu/install/chrome/install_chrome.sh \
+                  /ubuntu/install/vs_code/install_vs_code.sh"
 ### Envrionment config
+
+RUN apt update
+RUN yes | apt-get install gdebi
 
 ### Node Ini
 RUN apt-get update && apt-get install -y \
@@ -31,7 +34,7 @@ ENV NODE_PATH $NODE_HOME/lib/node_modules
 ENV PATH $NODE_HOME/bin:$PATH
 RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
 # comes with npm
-# RUN npm install -g typescript
+RUN npm install -g typescript
 ### Node End
 
 ### Oracle client Ini
@@ -48,27 +51,27 @@ ENV ORACLE_HOME="/tmp/oraclecli/instantclient_21_12"
 ENV LD_LIBRARY_PATH="/tmp/oraclecli/instantclient_21_12:$LD_LIBRARY_PATH" 
 ### Oracle client End
 
-# RUN apt-get install git
+RUN apt-get install git
 
+# NOTA: los ficheros descargados tienen el formato de Git que es Raw no son validos ya que no son formato UTF-8
 # install chrome
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/custom_startup.sh -P $INST_DIR/ubuntu/install/chrome
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/install_chrome.sh -P $INST_DIR/ubuntu/install/chrome
+#RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/install_chrome.sh -P $INST_DIR/ubuntu/install/chrome
 # install chrome
 
 # install vs code
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/custom_startup.sh -P $INST_DIR/ubuntu/install/vs_code
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/install_vs_code.sh -P $INST_DIR/ubuntu/install/vs_code
+#RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/install_vs_code.sh -P $INST_DIR/ubuntu/install/vs_code
 # install vs code
 
 # install dbeaver
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/custom_startup.sh -P $INST_DIR/ubuntu/install/dbeaver
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/install_dbeaver.sh -P $INST_DIR/ubuntu/install/dbeaver
+#RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/install_dbeaver.sh -P $INST_DIR/ubuntu/install/dbeaver
 # install dbeaver
 
 # install smartgit
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/custom_startup.sh -P $INST_DIR/ubuntu/install/smartgit
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/install_smartgit.sh -P $INST_DIR/ubuntu/install/smartgit
+#RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/install_smartgit.sh -P $INST_DIR/ubuntu/install/smartgit
 # install smartgit
+
+# Copy install scripts
+COPY ./install $INST_DIR/ubuntu/install
 
 # Run installations
 RUN \
