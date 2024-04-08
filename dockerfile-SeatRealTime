@@ -15,7 +15,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DONT_PROMPT_WSL_INSTALL="No_Prompt_please" \
     INST_DIR=$STARTUPDIR/install \
     INST_SCRIPTS="/ubuntu/install/dbeaver/install_dbeaver.sh \
-                  /ubuntu/install/smartgit/install_smartgit.sh \
                   /ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh"
 ### Envrionment config
@@ -65,10 +64,6 @@ RUN apt-get install git
 # install dbeaver
 #RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/install_dbeaver.sh -P $INST_DIR/ubuntu/install/dbeaver
 # install dbeaver
-
-# install smartgit
-#RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/install_smartgit.sh -P $INST_DIR/ubuntu/install/smartgit
-# install smartgit
 
 # Copy install scripts
 COPY ./install $INST_DIR/ubuntu/install
