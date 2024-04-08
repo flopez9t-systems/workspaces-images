@@ -17,22 +17,24 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_SCRIPTS="/ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/dbeaver/install_dbeaver.sh \
-                  /ubuntu/install/smartgit/install_smartgit.sh \
                   /ubuntu/install/eclipse/install_eclipse.sh"
 ### Envrionment config
+
+RUN apt update
+RUN yes | apt-get install gdebi
 
 ### Node Ini
 RUN apt-get update && apt-get install -y \
   ca-certificates \
   curl
-ARG NODE_VERSION=20.12.0
+ARG NODE_VERSION=14.21.3
 ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
 ARG NODE_HOME=/opt/$NODE_PACKAGE
 ENV NODE_PATH $NODE_HOME/lib/node_modules
 ENV PATH $NODE_HOME/bin:$PATH
 RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
 # comes with npm
-# RUN npm install -g typescript
+RUN npm install -g typescript
 ### Node End
 
 ### Oracle client Ini
@@ -49,32 +51,21 @@ ENV ORACLE_HOME="/tmp/oraclecli/instantclient_21_12"
 ENV LD_LIBRARY_PATH="/tmp/oraclecli/instantclient_21_12:$LD_LIBRARY_PATH" 
 ### Oracle client End
 
-# RUN apt-get install git
+RUN apt-get install git
 
-# install chrome
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/custom_startup.sh -P $INST_DIR/ubuntu/install/chrome
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/chrome/install_chrome.sh -P $INST_DIR/ubuntu/install/chrome
-# install chrome
+# Descarga ficheros Opcion 1
+RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/main.zip --output /tmp/main.zip
+RUN unzip main.zip -d /tmp
+RUN rm ./main.zip
+# Descarga ficheros Opcion 1
 
-# install vs code
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/custom_startup.sh -P $INST_DIR/ubuntu/install/vs_code
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/vs_code/install_vs_code.sh -P $INST_DIR/ubuntu/install/vs_code
-# install vs code
+# Descarga ficheros Opcion 2
+#RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
+# Descarga ficheros Opcion 2
 
-# install dbeaver
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/custom_startup.sh -P $INST_DIR/ubuntu/install/dbeaver
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/dbeaver/install_dbeaver.sh -P $INST_DIR/ubuntu/install/dbeaver
-# install dbeaver
-
-# install smartgit
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/custom_startup.sh -P $INST_DIR/ubuntu/install/smartgit
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/smartgit/install_smartgit.sh -P $INST_DIR/ubuntu/install/smartgit
-# install smartgit
-
-# install eclipse
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/eclipse/eclipse.desktop -P $INST_DIR/ubuntu/install/eclipse
-RUN wget -q https://github.com/flopez9t-systems/workspaces-images/tree/main/src/ubuntu/install/eclipse/install_eclipse.sh -P $INST_DIR/ubuntu/install/eclipse
-# install eclipse
+RUN mkdir -p /dockerstartup/install/ubuntu
+# Copy install scripts
+RUN cp -r ./workspaces-images-main/src/ubuntu $INST_DIR
 
 # Run installations
 RUN \
@@ -87,6 +78,9 @@ RUN \
   mkdir -p /home/kasm-user && \
   chown -R 1000:0 /home/kasm-user && \
   rm -Rf ${INST_DIR}
+# Run installations
+
+RUN rm -R  ./workspaces-images-main
 
 # Install sublime
 RUN  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - \
@@ -99,6 +93,40 @@ RUN  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add
     && chmod +x $HOME/Desktop/sublime_text.desktop \
     && chown 1000:1000 $HOME/Desktop/sublime_text.desktop
 # Install sublime
+
+USER kasm-user
+# install VS Code extensions
+# RUN chmod 777 -R $HOME/.vscode/extensions/
+RUN code --force --install-extension Gruntfuggly.activitusbar \
+                 --force --install-extension usernamehw.errorlens \
+                 --force --install-extension eamodio.gitlens \
+                 --force --install-extension mhutchie.git-graph \
+                 --force --install-extension donjayamanne.githistory \
+                 --force --install-extension aaron-bond.better-comments \
+                 --force --install-extension SimonSiefke.prettier-vscode \
+                 --force --install-extension usernamehw.remove-empty-lines \
+                 --force --install-extension spywhere.guides \
+                 --force --install-extension oderwat.indent-rainbow \
+                 --force --install-extension yzhang.markdown-all-in-one \
+                 --force --install-extension dbaeumer.vscode-eslint \
+                 --force --install-extension RapidAPI.vscode-rapidapi-client \
+                 --force --install-extension RapidAPI.vscode-services \
+                 --force --install-extension MS-CEINTL.vscode-language-pack-es \
+                 --force --install-extension vscode-icons-team.vscode-icons \
+                 --force --install-extension ms-vscode-remote.remote-containers \
+                 --force --install-extension ms-azuretools.vscode-docker \
+                 --force --install-extension ms-vscode-remote.remote-wsl \
+                 --force --install-extension igni24.autobarrelmanager \
+                 --force --install-extension formulahendry.auto-rename-tag \
+                 --force --install-extension SimonSiefke.svg-preview \
+                 --force --install-extension ms-vscode.js-debug-nightly \
+                 --force --install-extension mgmcdermott.vscode-language-babel \
+                 --force --install-extension xabikos.JavaScriptSnippets \
+                 --force --install-extension p42ai.refactor \
+                 --force --install-extension woodreamz.es7-react-js-snippets \
+                 --force --install-extension planbcoding.vscode-react-refactor \
+                 --force --install-extension msjsdiag.vscode-react-native
+# install VS Code extensions
 ######### End Customizations ###########
 
 # Userspace Runtime
