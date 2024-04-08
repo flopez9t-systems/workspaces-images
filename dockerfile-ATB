@@ -37,20 +37,6 @@ RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC 
 RUN npm install -g typescript
 ### Node End
 
-### Oracle client Ini
-RUN apt-get update && apt-get install --no-install-recommends --yes openssl
-RUN apt-get install -y libaio1
-RUN apt install unzip
-RUN wget https://download.oracle.com/otn_software/linux/instantclient/2112000/instantclient-basic-linux.x64-21.12.0.0.0dbru.zip -P /tmp
-WORKDIR /tmp
-RUN unzip instantclient-basic-linux.x64-21.12.0.0.0dbru.zip -d /tmp/oraclecli
-RUN chmod 755 -R /tmp/oraclecli
-ENV NODE_ENV dev
-ENV PATH="/tmp/oraclecli/instantclient_21_12:${PATH}"
-ENV ORACLE_HOME="/tmp/oraclecli/instantclient_21_12"
-ENV LD_LIBRARY_PATH="/tmp/oraclecli/instantclient_21_12:$LD_LIBRARY_PATH" 
-### Oracle client End
-
 RUN apt-get install git
 
 # Descarga ficheros Opcion 1
@@ -127,6 +113,12 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
                  --force --install-extension planbcoding.vscode-react-refactor \
                  --force --install-extension msjsdiag.vscode-react-native
 # install VS Code extensions
+
+# Eclipse cambiar perfil por defecto
+# ~/.eclipse/org.eclipse.platform_4.3.0_1473617060_linux_gtk_x86_64/configuration/config.ini 
+# osgi.instance.area.default=@user.home/workspace
+# Eclipse cambiar perfil por defecto
+
 ######### End Customizations ###########
 
 # Userspace Runtime
