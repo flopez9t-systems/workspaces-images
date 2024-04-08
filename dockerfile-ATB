@@ -114,6 +114,15 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
                  --force --install-extension msjsdiag.vscode-react-native
 # install VS Code extensions
 
+# install Apache maven
+RUN wget https://dlcdn.apache.org/maven/maven-3/3.9.6/source/apache-maven-3.9.2-src.tar.gz -P /tmp
+# RUN curl -L https://dlcdn.apache.org/maven/maven-3/3.9.6/source/apache-maven-3.9.2-src.tar.gz --output /tmp/apache-maven-3.9.2-src.tar.gz
+sudo apt-get install alien
+sudo alien -d /tmp/apache-maven-3.9.2-src.tar.gz 
+RUN rm ./main.zip
+
+# install Apache maven
+
 # Eclipse cambiar perfil por defecto
 # ~/.eclipse/org.eclipse.platform_4.3.0_1473617060_linux_gtk_x86_64/configuration/config.ini 
 # osgi.instance.area.default=@user.home/workspace
