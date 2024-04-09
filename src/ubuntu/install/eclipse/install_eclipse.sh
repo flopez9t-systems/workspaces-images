@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ECLIPSE_VER_DATE="2024-1203"
+ECLIPSE_VER_DATE="2024-03"
 
 cd /tmp
 wget -q -O eclipse.tar.gz "https://mirrors.xmission.com/eclipse/technology/epp/downloads/release/${ECLIPSE_VER_DATE}/R/eclipse-jee-${ECLIPSE_VER_DATE}-R-linux-gtk-$(arch).tar.gz"
