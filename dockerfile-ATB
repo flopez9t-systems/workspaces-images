@@ -1,8 +1,3 @@
-ARG BASE_TAG="develop"
-ARG BASE_IMAGE="core-ubuntu-jammy"
-FROM kasmweb/$BASE_IMAGE:$BASE_TAG
-USER root
-
 ENV HOME /home/kasm-default-profile
 ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
@@ -37,21 +32,25 @@ RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC 
 RUN npm install -g typescript
 ### Node End
 
+RUN apt-get update && apt-get install --no-install-recommends --yes openssl
+RUN apt-get install -y libaio1
+RUN apt install unzip
+
 RUN apt-get install git
 
 # Descarga ficheros Opcion 1
-RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/main.zip --output /tmp/main.zip
-RUN unzip main.zip -d /tmp
-RUN rm ./main.zip
+#RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/workspaces-images-main.zip --output /tmp/workspaces-images-main.zip
+#RUN unzip ./workspaces-images-main.zip -d /tmp
+#RUN rm /tmp/workspaces-images-main.zip
 # Descarga ficheros Opcion 1
 
 # Descarga ficheros Opcion 2
-#RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
+RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
 # Descarga ficheros Opcion 2
 
 RUN mkdir -p /dockerstartup/install/ubuntu
 # Copy install scripts
-RUN cp -r ./workspaces-images-main/src/ubuntu $INST_DIR
+RUN cp -r /tmp/workspaces-images-main/src/ubuntu $INST_DIR
 
 # Run installations
 RUN \
@@ -66,7 +65,7 @@ RUN \
   rm -Rf ${INST_DIR}
 # Run installations
 
-RUN rm -R  ./workspaces-images-main
+RUN rm -R  /tmp/workspaces-images-main
 
 # Install sublime
 RUN  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - \
@@ -114,19 +113,21 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
                  --force --install-extension msjsdiag.vscode-react-native
 # install VS Code extensions
 
-# install Apache maven
-RUN wget https://dlcdn.apache.org/maven/maven-3/3.9.6/source/apache-maven-3.9.2-src.tar.gz -P /tmp
-# RUN curl -L https://dlcdn.apache.org/maven/maven-3/3.9.6/source/apache-maven-3.9.2-src.tar.gz --output /tmp/apache-maven-3.9.2-src.tar.gz
-sudo apt-get install alien
-sudo alien -d /tmp/apache-maven-3.9.2-src.tar.gz 
-RUN rm ./apache-maven-3.9.2-src.tar.gz
-# install Apache maven
+# install OpenJdk 8u372-b07
+# https://devopspilot.com/content/docker/tutorials/Dockerfile/02-create-a-dokerfile-for-installing-openjdk15.html
+# https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html
+# https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=416&field_operating_system_target_id=426&field_architecture_target_id=391&field_java_package_target_id=396
+RUN curl https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u372-b07/openlogic-openjdk-8u372-b07-linux-x64.tar.gz | tar -xzC /tmp
+ENV JAVA_HOME '/tmp/openlogic-openjdk-8u372-b07-linux-x64'
+ENV PATH="$JAVA_HOME/bin:$PATH"
+# install OpenJdk 8u372-b07
 
-# install OpenJdk 8u372-b07
-RUN wget https://openjdk-sources.osci.io/openjdk8/openjdk8u372-ga.tar.xz -P /tmp
-sudo alien -d /tmp/openjdk8u372-ga.tar.xz
-RUN rm ./openjdk8u372-ga.tar.xz
-# install OpenJdk 8u372-b07
+# install Apache maven
+# https://maven.apache.org/install.html
+# https://phoenixnap.com/kb/install-maven-on-ubuntu
+# https://www.digitalocean.com/community/tutorials/install-maven-linux-ubuntu
+RUN curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz | tar -xzC /tmp
+# install Apache maven
 
 # Eclipse cambiar perfil por defecto
 # ~/.eclipse/org.eclipse.platform_4.3.0_1473617060_linux_gtk_x86_64/configuration/config.ini 
