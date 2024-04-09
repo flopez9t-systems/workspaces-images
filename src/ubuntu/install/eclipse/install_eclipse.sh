@@ -7,6 +7,6 @@ wget -q -O eclipse.tar.gz "https://mirrors.xmission.com/eclipse/technology/epp/d
 tar -xzf eclipse.tar.gz -C /opt
 
 ECLIPSE_ICON="/opt/eclipse/plugins/$(ls /opt/eclipse/plugins/ | grep -m 1 org.eclipse.platform_)/eclipse128.png"
-sed -i "s#eclipse128.png#${ECLIPSE_ICON}#" $INST_SCRIPTS/eclipse/eclipse.desktop
-cp $INST_SCRIPTS/eclipse/eclipse.desktop $HOME/Desktop/
-cp $INST_SCRIPTS/eclipse/eclipse.desktop /usr/share/applications/
+sed -i "s#eclipse128.png#${ECLIPSE_ICON}#" $INST_DIR/ubuntu/install/eclipse/eclipse.desktop
+cp $INST_DIR/ubuntu/install/eclipse/eclipse.desktop $HOME/Desktop/
+cp $INST_DIR/ubuntu/install/eclipse/eclipse.desktop /usr/share/applications/
