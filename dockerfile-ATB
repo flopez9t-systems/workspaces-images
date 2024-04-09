@@ -1,3 +1,8 @@
+ARG BASE_TAG="develop"
+ARG BASE_IMAGE="core-ubuntu-jammy"
+FROM kasmweb/$BASE_IMAGE:$BASE_TAG
+USER root
+
 ENV HOME /home/kasm-default-profile
 ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
@@ -39,13 +44,14 @@ RUN apt install unzip
 RUN apt-get install git
 
 # Descarga ficheros Opcion 1
-#RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/workspaces-images-main.zip --output /tmp/workspaces-images-main.zip
-#RUN unzip ./workspaces-images-main.zip -d /tmp
-#RUN rm /tmp/workspaces-images-main.zip
+# RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/main.zip --output /tmp/main.zip
+RUN wget -q -O main.zip "https://github.com/flopez9t-systems/workspaces-images/archive/main.zip"
+RUN unzip ./main.zip -d /tmp
+RUN rm ./main.zip
 # Descarga ficheros Opcion 1
 
 # Descarga ficheros Opcion 2
-RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
+# RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
 # Descarga ficheros Opcion 2
 
 RUN mkdir -p /dockerstartup/install/ubuntu
