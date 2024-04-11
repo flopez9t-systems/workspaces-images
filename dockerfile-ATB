@@ -125,19 +125,22 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
 # https://www.openlogic.com/openjdk-downloads?field_java_parent_version_target_id=416&field_operating_system_target_id=426&field_architecture_target_id=391&field_java_package_target_id=396
 RUN curl https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u372-b07/openlogic-openjdk-8u372-b07-linux-x64.tar.gz | tar -xzC /tmp
 ENV JAVA_HOME '/tmp/openlogic-openjdk-8u372-b07-linux-x64'
-ENV PATH="$JAVA_HOME/bin:$PATH"
+ENV PATH "$JAVA_HOME/bin:$PATH"
 # install OpenJdk 8u372-b07
 
 # install Apache maven
 # https://maven.apache.org/install.html
 # https://phoenixnap.com/kb/install-maven-on-ubuntu
 # https://www.digitalocean.com/community/tutorials/install-maven-linux-ubuntu
-RUN curl https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz | tar -xzC /tmp
+RUN wget -q -O /tmp/maven.tar.gz "https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz"
+RUN tar -xzf /tmp/maven.tar.gz -C /tmp
+ENV M2_HOME=/tmp/apache-maven-3.9.6
+ENV MAVEN_HOME=/tmp/apache-maven-3.9.6
+ENV PATH=${M2_HOME}/bin:${PATH}
 # install Apache maven
 
 # Eclipse cambiar perfil por defecto
-# ~/.eclipse/org.eclipse.platform_4.3.0_1473617060_linux_gtk_x86_64/configuration/config.ini 
-# osgi.instance.area.default=@user.home/workspace
+# RUN bash$ sed -i 's/osgi.instance.area.default=.*/osgi.instance.area.default=/home/kasm-default-profile/' /opt/eclipse/configuration/config.ini
 # Eclipse cambiar perfil por defecto
 
 ######### End Customizations ###########
