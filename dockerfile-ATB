@@ -139,15 +139,44 @@ ENV MAVEN_HOME=/tmp/apache-maven-3.9.6
 ENV PATH=${M2_HOME}/bin:${PATH}
 # install Apache maven
 
+# instalar lombok
+RUN mkdir -p /tmp/lombok
+RUN curl -L https://projectlombok.org/downloads/lombok.jar --output /tmp/lombok/lombok.jar
+USER root
+RUN echo "-javaagent:/tmp/lombok/lombok.jar\n" >> /opt/eclipse/eclipse.ini
+# instalar lombok
+
+# instalar plugin eclipse marketplace
+#https://marketplace.eclipse.org/marketplace-client-intro?mpc_install=5578792 https://marketplace.eclipse.org/node/5578792/api/p <ius> <updateurl>
+#./eclipse -nosplash -application org.eclipse.equinox.p2.director -repository https://download.eclipse.org/tools/cdt/releases/11.5 -installIU org.eclipse.cdt.feature.group -list
+#https://marketplace.eclipse.org/node/1794107/api/p
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://cdn.spring.io/spring-tools/release/TOOLS/sts4/update/e4.31/ -installIU org.springframework.boot.ide.main.feature.feature.group
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://cdn.spring.io/spring-tools/release/TOOLS/sts4/update/e4.31/ -installIU org.springframework.tooling.boot.ls.feature.feature.group
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://cdn.spring.io/spring-tools/release/TOOLS/sts4/update/e4.31/ -installIU org.springframework.ide.eclipse.boot.dash.feature.feature.group
+#https://marketplace.eclipse.org/node/9295/api/p
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.r.feature.group
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.redocs.tex.r.group
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.redocs.wikitext.r.feature.group
+RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.eutils.autorun.feature.group
+#https://marketplace.eclipse.org/node/2844337/api/p
+RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p2.director -noSplash -repository https://mapstruct.org/eclipse/ -installIU org.mapstruct.eclipse.feature.feature.group -list
+#https://marketplace.eclipse.org/node/2755329/api/p
+RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p2.director -noSplash -repository https://pmd.github.io/pmd-eclipse-plugin-p2-site/ -installIU net.sourceforge.pmd.eclipse.feature.group -list
+# instalar plugin eclipse marketplace
+
 # Eclipse cambiar perfil por defecto
 # RUN bash$ sed -i 's/osgi.instance.area.default=.*/osgi.instance.area.default=/home/kasm-default-profile/' /opt/eclipse/configuration/config.ini
 # Eclipse cambiar perfil por defecto
 
+RUN yes | apt install python2
+USER kasm-user
 ######### End Customizations ###########
 
 # Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
+
+CMD ["--tail-log"]
 
 CMD ["--tail-log"]
