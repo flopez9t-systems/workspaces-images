@@ -144,15 +144,9 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
 ######### End Customizations ###########
 
 #USER root
-#RUN git config --global user.name flopez9
-#RUN git config --global user.email F.GONZALEZ-LOPEZ@t-systems.com
-#RUN git config --global user.password F&peli123456
-#RUN mkdir -p /share/REALTIME/ESPRHRREAL_SEAT_BACK
-#RUN git clone --branch master https://flopez9@setools.t-systems.es/gitblit/r/git-auto/ESPRHRREAL_SEAT_BACK.git /share/REALTIME/ESPRHRREAL_SEAT_BACK
-#RUN mkdir -p /share/REALTIME/ESPRHRREAL_SEAT_BACK
-#RUN git clone --branch dev_configuracion-Monitorizacion https://flopez9@setools.t-systems.es/gitblit/r/git-auto/ESPRHRREAL_SEAT.git /share/REALTIME/ESPRHRREAL_SEAT_FRONT/configuracion
-#RUN mkdir -p /share/REALTIME/ESPRHRREAL_SEAT_FRONT/monitorizacion
-#RUN git clone --branch dev_monitorizacion https://flopez9@setools.t-systems.es/gitblit/r/git-auto/ESPRHRREAL_SEAT.git /share/REALTIME/ESPRHRREAL_SEAT_FRONT/monitorizacion
+#RUN git config --global user.name x
+#RUN git config --global user.email x
+#RUN git config --global user.password x
 
 # Userspace Runtime
 ENV HOME /home/kasm-user
