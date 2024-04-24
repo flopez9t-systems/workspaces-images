@@ -94,7 +94,7 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
                  --force --install-extension mhutchie.git-graph \
                  --force --install-extension donjayamanne.githistory \
                  --force --install-extension aaron-bond.better-comments \
-                 --force --install-extension SimonSiefke.prettier-vscode \
+                 --force --install-extension esbenp.prettier-vscode \
                  --force --install-extension usernamehw.remove-empty-lines \
                  --force --install-extension spywhere.guides \
                  --force --install-extension oderwat.indent-rainbow \
