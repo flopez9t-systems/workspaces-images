@@ -154,10 +154,10 @@ RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash 
 RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://cdn.spring.io/spring-tools/release/TOOLS/sts4/update/e4.31/ -installIU org.springframework.tooling.boot.ls.feature.feature.group
 RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://cdn.spring.io/spring-tools/release/TOOLS/sts4/update/e4.31/ -installIU org.springframework.ide.eclipse.boot.dash.feature.feature.group
 #https://marketplace.eclipse.org/node/9295/api/p
-RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.r.feature.group
-RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.redocs.tex.r.group
-RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.redocs.wikitext.r.feature.group
-RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312 -installIU org.eclipse.statet.eutils.autorun.feature.group
+#RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312/ -installIU org.eclipse.statet.r.feature.group
+#RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312/ -installIU org.eclipse.statet.redocs.tex.r.feature.group
+#RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312/ -installIU org.eclipse.statet.redocs.wikitext.r.feature.group
+#RUN /opt/eclipse/eclipse -application org.eclipse.equinox.p2.director -noSplash -repository https://download.eclipse.org/statet/releases/4.9/E202312/ -installIU org.eclipse.statet.eutils.autorun.feature.group
 #https://marketplace.eclipse.org/node/2844337/api/p
 RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p2.director -noSplash -repository https://mapstruct.org/eclipse/ -installIU org.mapstruct.eclipse.feature.feature.group -list
 #https://marketplace.eclipse.org/node/2755329/api/p
@@ -176,7 +176,5 @@ USER kasm-user
 ENV HOME /home/kasm-user
 WORKDIR $HOME
 USER 1000
-
-CMD ["--tail-log"]
 
 CMD ["--tail-log"]
