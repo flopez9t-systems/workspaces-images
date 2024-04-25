@@ -143,11 +143,6 @@ RUN code --force --install-extension Gruntfuggly.activitusbar \
 # install VS Code extensions
 ######### End Customizations ###########
 
-#USER root
-#RUN git config --global user.name x
-#RUN git config --global user.email x
-#RUN git config --global user.password "x"
-
 # Userspace Runtime
 ENV HOME /home/kasm-user
 WORKDIR $HOME
