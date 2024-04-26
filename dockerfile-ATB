@@ -161,8 +161,10 @@ RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p
 # instalar plugin eclipse marketplace
 
 # Eclipse cambiar ruta perfil por defecto
-# RUN bash$ sed -i 's/osgi.instance.area.default=.*/osgi.instance.area.default=/home/kasm-default-profile/' /opt/eclipse/configuration/config.ini
+#RUN sed -i 's@osgi.instance.area.default=.*@osgi.instance.area.default=/share/eclipse-workspace@' /opt/eclipse/configuration/config.ini
+#RUN sed -i 's@Dosgi.instance.area.default=.*@Dosgi.instance.area.default=/share/eclipse-workspace@' /opt/eclipse/eclipse.ini
 # Eclipse cambiar ruta perfil por defecto
+
 ######### End Customizations ###########
 
 # Userspace Runtime
