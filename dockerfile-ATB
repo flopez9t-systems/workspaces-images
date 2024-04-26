@@ -8,7 +8,7 @@ ENV STARTUPDIR /dockerstartup
 WORKDIR $HOME
 
 ######### Customize Container Here ###########
-### Envrionment config
+# Envrionment config
 ENV DEBIAN_FRONTEND=noninteractive \
     SKIP_CLEAN=true \
     KASM_RX_HOME=$STARTUPDIR/kasmrx \
@@ -17,42 +17,39 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_SCRIPTS="/ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/dbeaver/install_dbeaver.sh \
-                  /ubuntu/install/eclipse/install_eclipse.sh"
-### Envrionment config
+                  /ubuntu/install/eclipse/install_eclipse.sh \
+                  /ubuntu/install/smartgit/install_smartgit.sh"
+# Envrionment config
 
 RUN apt update
+RUN apt-get update
+RUN apt-get install -y \ca-certificates \curl
+RUN apt-get install --no-install-recommends --yes openssl
+RUN apt-get install -y libaio1
+RUN apt-get install -y apt-transport-https
+RUN apt-get install -y sudo
 RUN yes | apt-get install gdebi
+RUN apt install unzip
+RUN apt-get install git
+RUN apt-get install iputils-ping -y
+RUN yes | apt install python2
 
-### Node Ini
-RUN apt-get update && apt-get install -y \
-  ca-certificates \
-  curl
+# Node Ini
 ARG NODE_VERSION=14.21.3
 ARG NODE_PACKAGE=node-v$NODE_VERSION-linux-x64
 ARG NODE_HOME=/opt/$NODE_PACKAGE
 ENV NODE_PATH $NODE_HOME/lib/node_modules
 ENV PATH $NODE_HOME/bin:$PATH
 RUN curl https://nodejs.org/dist/v$NODE_VERSION/$NODE_PACKAGE.tar.gz | tar -xzC /opt/
-# comes with npm
 RUN npm install -g typescript
-### Node End
+# Node End
 
-RUN apt-get update && apt-get install --no-install-recommends --yes openssl
-RUN apt-get install -y libaio1
-RUN apt install unzip
-
-RUN apt-get install git
-
-# Descarga ficheros Opcion 1
+# Descarga ficheros
 # RUN curl -L https://github.com/flopez9t-systems/workspaces-images/archive/main.zip --output /tmp/main.zip
 RUN wget -q -O main.zip "https://github.com/flopez9t-systems/workspaces-images/archive/main.zip"
 RUN unzip ./main.zip -d /tmp
 RUN rm ./main.zip
-# Descarga ficheros Opcion 1
-
-# Descarga ficheros Opcion 2
-# RUN git clone https://github.com/flopez9t-systems/workspaces-images.git /tmp/workspaces-images-main
-# Descarga ficheros Opcion 2
+# Descarga ficheros
 
 RUN mkdir -p /dockerstartup/install/ubuntu
 # Copy install scripts
@@ -75,8 +72,6 @@ RUN rm -R  /tmp/workspaces-images-main
 
 # Install sublime
 RUN  wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - \
-    && apt-get update \
-    && apt-get install -y apt-transport-https \
     && echo "deb https://download.sublimetext.com/ apt/stable/" |  tee /etc/apt/sources.list.d/sublime-text.list \
     && apt-get update \
     && apt-get install sublime-text \
@@ -165,11 +160,9 @@ RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p
 RUN /opt/eclipse/eclipse -clean -purgeHistory -application org.eclipse.equinox.p2.director -noSplash -repository https://pmd.github.io/pmd-eclipse-plugin-p2-site/ -installIU net.sourceforge.pmd.eclipse.feature.group -list
 # instalar plugin eclipse marketplace
 
-# Eclipse cambiar perfil por defecto
+# Eclipse cambiar ruta perfil por defecto
 # RUN bash$ sed -i 's/osgi.instance.area.default=.*/osgi.instance.area.default=/home/kasm-default-profile/' /opt/eclipse/configuration/config.ini
-# Eclipse cambiar perfil por defecto
-
-RUN yes | apt install python2
+# Eclipse cambiar ruta perfil por defecto
 ######### End Customizations ###########
 
 # Userspace Runtime
