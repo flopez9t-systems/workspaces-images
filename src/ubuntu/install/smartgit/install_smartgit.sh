@@ -2,7 +2,7 @@
 set -ex
 
 # Install Smartgit
-wget -q https://www.syntevo.com/downloads/smartgit/smartgit-win-23_1_3.zip -O smartgit.deb
+wget -q https://www.syntevo.com/downloads/smartgit/smartgit-23_1_3.deb -O smartgit.deb
 apt-get update
 apt-get install -y ./smartgit.deb
 
