@@ -17,8 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     INST_SCRIPTS="/ubuntu/install/chrome/install_chrome.sh \
                   /ubuntu/install/vs_code/install_vs_code.sh \
                   /ubuntu/install/dbeaver/install_dbeaver.sh \
-                  /ubuntu/install/eclipse/install_eclipse.sh \
-                  /ubuntu/install/smartgit/install_smartgit.sh"
+                  /ubuntu/install/eclipse/install_eclipse.sh"
 # Envrionment config
 
 RUN apt update
