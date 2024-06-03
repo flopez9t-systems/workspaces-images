@@ -29,8 +29,10 @@ RUN apt-get install -y sudo
 RUN yes | apt-get install gdebi
 RUN apt install unzip
 RUN apt install zip
+RUN apt-get install tar
 RUN apt-get install git
 RUN apt-get install iputils-ping -y
+RUN yes | apt-get install git-cola
 
 # Node Ini
 ARG NODE_VERSION=20.12.0
